@@ -1,0 +1,5 @@
+OpportunityUCIDataset/
+opportunity+activity+recognition.zip
+Opp_HAR/*.pt
+Opp_HAR/*.dat
+
