@@ -31,9 +31,9 @@ class CNN_Opp_HAR_SL(nn.Module):
         self.cpc = CPC(configs.out_channels, 16, 12)
     def forward(self, src):
         # reshape input (batch_size, input_dim, sequence length)
-        print(src.size)
+        print(src.size.item())
         src = src.view(src.size(0), self.input_dim, -1)
-        print(src.size)
+        print(src.size.item())
         seq_features = self.encoder(src).squeeze()
         vec_features = self.flatten(seq_features).squeeze()
         predictions = self.Classifier(vec_features)
