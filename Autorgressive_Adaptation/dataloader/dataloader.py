@@ -16,7 +16,7 @@ class Load_Dataset(Dataset):
 
         X_train = dataset["samples"]
         y_train = dataset["labels"]
-
+        print("Debug X_train", X_train)
         if len(X_train.shape) < 3:
             X_train = X_train.unsqueeze(2) #X_train.unsqueeze(2)   # np.expand_dims(X_train, 2)
         self.num_channels = min(X_train.shape)
