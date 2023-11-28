@@ -16,15 +16,16 @@ class Load_Dataset(Dataset):
 
         X_train = dataset["samples"]
         y_train = dataset["labels"]
-        print("Debug X_train", list(X_train.size()))
-        breakpoint()
+        print("Debug X_train", list(X_train.size()))    #DEBUG
         if len(X_train.shape) < 3:
             X_train = X_train.unsqueeze(2) #X_train.unsqueeze(2)   # np.expand_dims(X_train, 2)
         self.num_channels = min(X_train.shape)
+        print(X_train.shape)    #DEBUG
+        print(self.num_channels)    #DEBUG
         if X_train.shape.index(self.num_channels) != 1:  # data dim is #samples, seq_len, #channels
             X_train = X_train.permute(0, 2, 1)
             # X_train = X_train.transpose(0,2,1)
-        print("Debug X_train", list(X_train.size()))
+        print("Debug X_train", list(X_train.size()))    #DEBUG
         if apply_transform:
             # Assume datashape: num_samples, num_channels, seq_length
             data_mean = torch.FloatTensor(self.num_channels).fill_(0).tolist()  # assume min= number of channels
