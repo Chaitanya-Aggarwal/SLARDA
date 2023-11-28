@@ -39,7 +39,7 @@ class Config(object):
 class base_model_configs(object):
     def __init__(self):
         # model configs
-        self.input_channels = 243
+        self.input_channels = 113
         self.out_channels = 16
         self.kernel_size = 8
         self.feat_dim = 16

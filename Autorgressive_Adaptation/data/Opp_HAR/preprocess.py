@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import sys
 
 # Define file paths
 input_dir = '../OpportunityUCIDataset/dataset/'
@@ -15,8 +16,10 @@ for name in names:
         data = np.loadtxt(input_file_path)
 
         # Extract content and label columns
-        content = torch.tensor(data[:, :243], dtype=torch.float32)
-        labels = torch.tensor(data[:, 243:], dtype=torch.float32)
+        content = torch.tensor(data[:, :113], dtype=torch.float32)
+        labels = torch.tensor(data[:, 243], dtype=torch.float32)
 
         # Save the content and labels into a new .pt file
         torch.save({'samples': content, 'labels': labels}, output_file_path)
+
+#LALALALA
