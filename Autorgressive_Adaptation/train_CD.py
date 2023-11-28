@@ -64,6 +64,7 @@ def main_train_cd():
     copy_Files(exp_log_dir, data_type, da_method)
     # loop through domains
     # loop through domains
+    print(src_tgt_product)
     counter = 0
     src_counter = 0
     for src_id, tgt_id in product(*src_tgt_product):
