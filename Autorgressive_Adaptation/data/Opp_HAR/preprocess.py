@@ -37,9 +37,7 @@ class TimeSeriesDataset(Dataset):
             # if ( label!=0 ):
             #     labels_data[0,maps[label[0]]]=1
             # labels_data[0, ]
-            labels_data = torch.tensor(check_map[self.data[idx+self.window_size-1:idx + self.window_size, 243]], dtype=torch.int64)
-            if ( labels_data[0]>3):
-                raise "FUCKING error"
+            labels_data = torch.tensor(check_map[self.data[idx+self.window_size-1:idx + self.window_size, 243].item()], dtype=torch.int64)
             # print(labels_data)
             # labels_data = fun.one_hot(labels_data.to(torch.int64), num_classes=4)
             # print(labels_data)
