@@ -28,6 +28,7 @@ class TimeSeriesDataset(Dataset):
         processed_content = []
         processed_labels = []
         maps = {1:0, 2:1, 4:2, 5:3}
+        check_map = {0:0,1:1,2:2,4:3,5:3}
         for idx in range(0, len(self.data) - self.window_size + 1, int(self.window_size * (1 - self.overlap))):
             window_data = self.data[idx:idx + self.window_size]
             content_data = torch.tensor(self.data[idx:idx + self.window_size, :113], dtype=torch.float32)
@@ -36,7 +37,7 @@ class TimeSeriesDataset(Dataset):
             # if ( label!=0 ):
             #     labels_data[0,maps[label[0]]]=1
             # labels_data[0, ]
-            labels_data = torch.tensor(self.data[idx+self.window_size-1:idx + self.window_size, 243], dtype=torch.int64)
+            labels_data = torch.tensor(check_map[self.data[idx+self.window_size-1:idx + self.window_size, 243]], dtype=torch.int64)
             # print(labels_data)
             # labels_data = fun.one_hot(labels_data.to(torch.int64), num_classes=4)
             # print(labels_data)
