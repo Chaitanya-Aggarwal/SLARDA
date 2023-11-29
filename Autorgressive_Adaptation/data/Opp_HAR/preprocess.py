@@ -3,10 +3,11 @@ import numpy as np
 from torch.utils.data import Dataset
 import torch.nn.functional as fun
 import argparse
+import pandas as pd
 
 class TimeSeriesDataset(Dataset):
-    def __init__(self, file_path, window_size, overlap):
-        self.data = self.load_data(file_path)
+    def __init__(self, file_paths, window_size, overlap):
+        self.data = [self.load_data(file_path) for file_path in file_paths]
         self.window_size = window_size
         self.overlap = overlap
         self.content, self.labels = self.process_data()
@@ -20,37 +21,34 @@ class TimeSeriesDataset(Dataset):
     def load_data(self, file_path):
         # Load data from the .dat file using np.loadtxt
         data = np.loadtxt(file_path)
-
         return data
 
+    def clean_data(self):
+        datas = []
+        for data in self.data:
+            df = pd.DataFrame(data)
+            df.interpolate('linear', inplace=True)
+            datas.append(df.to_numpy())
+        self.data = datas
+            
+    def get_label(self, data, idx):
+        check_map = {0:0,1:1,2:2,4:3,5:3}
+        return torch.tensor(check_map[data[idx+self.window_size-1:idx + self.window_size, 243].item()], dtype=torch.int64)
+
     def process_data(self):
-        processed_data = []
+        self.clean_data()
         processed_content = []
         processed_labels = []
-        maps = {1:0, 2:1, 4:2, 5:3}
-        check_map = {0:0,1:1,2:2,4:3,5:3}
-        for idx in range(0, len(self.data) - self.window_size + 1, int(self.window_size * (1 - self.overlap))):
-            window_data = self.data[idx:idx + self.window_size]
-            content_data = torch.tensor(self.data[idx:idx + self.window_size, :113], dtype=torch.float32)
-            labels_data = torch.zeros((1,4), dtype=torch.int64)
-            # label = self.data[idx+self.window_size-1:idx + self.window_size, 243]
-            # if ( label!=0 ):
-            #     labels_data[0,maps[label[0]]]=1
-            # labels_data[0, ]
-            labels_data = torch.tensor(check_map[self.data[idx+self.window_size-1:idx + self.window_size, 243].item()], dtype=torch.int64)
-            # print(labels_data)
-            # labels_data = fun.one_hot(labels_data.to(torch.int64), num_classes=4)
-            # print(labels_data)
-            # print(labels_data)
-            window_tensor = torch.tensor(window_data, dtype=torch.float32)
-            content_tensor = torch.tensor(content_data, dtype=torch.float32)
-            labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
-            processed_data.append(window_tensor)
-            processed_content.append(content_tensor)
-            processed_labels.append(labels_tensor)
+        for data in self.data:
+            for idx in range(0, len(data) - self.window_size + 1, int(self.window_size * (1 - self.overlap))):
+                content_data = torch.tensor(data[idx:idx + self.window_size, :113], dtype=torch.float32)
+                labels_data = self.get_label(data,idx)
+                content_tensor = torch.tensor(content_data, dtype=torch.float32)
+                labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
+                processed_content.append(content_tensor)
+                processed_labels.append(labels_tensor)
 
         # Stack the 2D tensors along a new dimension to create a 3D tensor
-        processed_data = torch.stack(processed_data, dim=0)
         processed_content = torch.stack(processed_content, dim=0)
         processed_labels = torch.stack(processed_labels, dim=0)
         return processed_content, processed_labels
@@ -65,14 +63,17 @@ def main():
     input_dir = '../OpportunityUCIDataset/dataset/'
     names = ['a','b','c','d']
     domain_map = { 'a':1 , 'b':2, 'c':3, 'd':4 }
-    data_map = {'train':1 , 'val':4, 'test':5 }
+    data_map = {'train': [1,2,3] , 'val':[4], 'test':[5] }
     for name in names:
         for sec in data_map.keys():
-            input_file_path = input_dir+'S'+str(domain_map[name])+'-ADL'+str(data_map[sec])+'.dat'
+            #Input file paths
+            input_file_paths = list()
+            for id in data_map[sec]:
+                input_file_paths.append(input_dir+'S'+str(domain_map[name])+'-ADL'+str(id)+'.dat')
             output_file_path = sec+'_'+name+'.pt'
-        
-            # Create the dataset with command-line arguments
-            dataset = TimeSeriesDataset(input_file_path, args.window_size, args.overlap)
+
+            #Creat the datasets
+            dataset = TimeSeriesDataset(input_file_paths, args.window_size, args.overlap)
 
             # Save the processed data as a .pt file
             torch.save({'samples':dataset.content, 'labels':dataset.labels}, output_file_path)
