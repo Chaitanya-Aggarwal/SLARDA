@@ -78,11 +78,11 @@ def model_evaluate(model, valid_dl, device):
             predictions, features = model(data)
 
             # compute loss
-            print("Predictions", type(predictions)) #DEBUG
-            print(predictions)
-            print(predictions.shape)    #DEBUG
-            print("Labels", labels) #DEBUG
-            print(labels.shape) #DEBUG
+            # print("Predictions", type(predictions)) #DEBUG
+            # print(predictions)
+            # print(predictions.shape)    #DEBUG
+            # print("Labels", labels) #DEBUG
+            # print(labels.shape) #DEBUG
             loss = criterion(predictions, labels)
             total_loss.append(loss.item())
             pred = predictions.max(1, keepdim=True)[1]  # get the index of the max log-probability
