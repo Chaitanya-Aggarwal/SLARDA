@@ -29,10 +29,10 @@ class TimeSeriesDataset(Dataset):
         for idx in range(0, len(self.data) - self.window_size + 1, int(self.window_size * (1 - self.overlap))):
             window_data = self.data[idx:idx + self.window_size]
             content_data = torch.tensor(self.data[idx:idx + self.window_size, :113], dtype=torch.float32)
-            labels_data = torch.tensor(self.data[idx:idx + self.window_size, 243], dtype=torch.float32)
+            labels_data = torch.tensor(self.data[idx+self.window_size-1:idx + self.window_size, 243], dtype=torch.float32)
             window_tensor = torch.tensor(window_data, dtype=torch.float32)
             content_tensor = torch.tensor(content_data, dtype=torch.float32)
-            labels_tensor = torch.tensor(labels_data[-1,:], dtype=torch.float32)
+            labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
             processed_data.append(window_tensor)
             processed_content.append(content_tensor)
             processed_labels.append(labels_tensor)
@@ -41,8 +41,7 @@ class TimeSeriesDataset(Dataset):
         processed_data = torch.stack(processed_data, dim=0)
         processed_content = torch.stack(processed_content, dim=0)
         processed_labels = torch.stack(processed_labels, dim=0)
-
-        return processed_content, processed_data
+        return processed_content, processed_labels
 
 def main():
     parser = argparse.ArgumentParser(description="Process time series data with sliding windows.")
@@ -68,30 +67,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# import torch
-# import numpy as np
-# import sys
-
-# # Define file paths
-# input_dir = '../OpportunityUCIDataset/dataset/'
-# names = ['a','b','c','d']
-# domain_map = { 'a':1 , 'b':2, 'c':3, 'd':4 }
-# data_map = {'train':1 , 'val':4, 'test':5 }
-# for name in names:
-#     for sec in data_map.keys():
-#         input_file_path = input_dir+'S'+str(domain_map[name])+'-ADL'+str(data_map[sec])+'.dat'
-#         output_file_path = sec+'_'+name+'.pt'
-    
-#         # Read data from the .dat file
-#         data = np.loadtxt(input_file_path)
-
-#         # Extract content and label columns
-#         content = torch.tensor(data[:, :113], dtype=torch.float32)
-#         labels = torch.tensor(data[:, 243], dtype=torch.float32)
-
-#         # Save the content and labels into a new .pt file
-#         torch.save({'samples': content, 'labels': labels}, output_file_path)
-
-# #LALALALA
