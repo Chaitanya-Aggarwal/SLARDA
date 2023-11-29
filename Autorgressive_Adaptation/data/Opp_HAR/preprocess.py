@@ -32,7 +32,7 @@ class TimeSeriesDataset(Dataset):
             labels_data = torch.tensor(self.data[idx:idx + self.window_size, 243], dtype=torch.float32)
             window_tensor = torch.tensor(window_data, dtype=torch.float32)
             content_tensor = torch.tensor(content_data, dtype=torch.float32)
-            labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
+            labels_tensor = torch.tensor(labels_data[-1,:], dtype=torch.float32)
             processed_data.append(window_tensor)
             processed_content.append(content_tensor)
             processed_labels.append(labels_tensor)
