@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from torch.utils.data import Dataset
-from torch.nn.functional import fun
+import torch.nn.functional as fun
 import argparse
 
 class TimeSeriesDataset(Dataset):
@@ -27,10 +27,14 @@ class TimeSeriesDataset(Dataset):
         processed_data = []
         processed_content = []
         processed_labels = []
+        maps = {1:0, 2:1, 4:2, 5:3}
         for idx in range(0, len(self.data) - self.window_size + 1, int(self.window_size * (1 - self.overlap))):
             window_data = self.data[idx:idx + self.window_size]
             content_data = torch.tensor(self.data[idx:idx + self.window_size, :113], dtype=torch.float32)
-            labels_data = fun.one_hot(torch.tensor(self.data[idx+self.window_size-1:idx + self.window_size, 243], dtype=torch.float32), num_classes=4)
+            labels_data = torch.zeros((1,4), dtype=torch.int64)
+            label = self.data[idx+self.window_size-1:idx + self.window_size, 243]
+            if ( label!=0 ):
+                labels_data[0,maps[label[0]]]=1
             window_tensor = torch.tensor(window_data, dtype=torch.float32)
             content_tensor = torch.tensor(content_data, dtype=torch.float32)
             labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
