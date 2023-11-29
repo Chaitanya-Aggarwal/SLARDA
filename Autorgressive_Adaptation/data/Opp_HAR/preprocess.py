@@ -40,7 +40,7 @@ class TimeSeriesDataset(Dataset):
             # print(labels_data)
             # labels_data = fun.one_hot(labels_data.to(torch.int64), num_classes=4)
             # print(labels_data)
-            print(labels_data)
+            # print(labels_data)
             window_tensor = torch.tensor(window_data, dtype=torch.float32)
             content_tensor = torch.tensor(content_data, dtype=torch.float32)
             labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
