@@ -32,9 +32,15 @@ class TimeSeriesDataset(Dataset):
             window_data = self.data[idx:idx + self.window_size]
             content_data = torch.tensor(self.data[idx:idx + self.window_size, :113], dtype=torch.float32)
             labels_data = torch.zeros((1,4), dtype=torch.int64)
-            label = self.data[idx+self.window_size-1:idx + self.window_size, 243]
-            if ( label!=0 ):
-                labels_data[0,maps[label[0]]]=1
+            # label = self.data[idx+self.window_size-1:idx + self.window_size, 243]
+            # if ( label!=0 ):
+            #     labels_data[0,maps[label[0]]]=1
+            # labels_data[0, ]
+            labels_data = torch.tensor(self.data[idx+self.window_size-1:idx + self.window_size, 243], dtype=torch.int64)
+            # print(labels_data)
+            # labels_data = fun.one_hot(labels_data.to(torch.int64), num_classes=4)
+            # print(labels_data)
+            print(labels_data)
             window_tensor = torch.tensor(window_data, dtype=torch.float32)
             content_tensor = torch.tensor(content_data, dtype=torch.float32)
             labels_tensor = torch.tensor(labels_data, dtype=torch.float32)
