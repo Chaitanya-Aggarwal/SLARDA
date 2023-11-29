@@ -90,10 +90,10 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
         n_correct = 0
 
         for step, ((source_data, source_labels), (target_data, target_labels)) in joint_loaders:
-            print("Training loop in slarda, source_labels before to(gpu)")  #DEBUG
-            print(type(source_labels))
-            print(source_labels)
-            print(source_labels.shape)
+            # print("Training loop in slarda, source_labels before to(gpu)")  #DEBUG
+            # print(type(source_labels))
+            # print(source_labels)
+            # print(source_labels.shape)
             source_data, source_labels, target_data, target_labels = source_data.float().to(device), source_labels.to(
                 device), target_data.float().to(device), target_labels.to(device)
 
@@ -142,12 +142,12 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
             # # Extract target domain features
 
             pred = source_pred.data.max(1, keepdim=True)[1]
-            print("Training loop in slarda, source_labels after to(gpu)")  #DEBUG
-            print(type(source_labels.data))
-            print(source_labels.data)
-            print("Predictions")
-            print(pred)
-            print(pred.shape)
+            # print("Training loop in slarda, source_labels after to(gpu)")  #DEBUG
+            # print(type(source_labels.data))
+            # print(source_labels.data)
+            # print("Predictions")
+            # print(pred)
+            # print(pred.shape)
             n_correct += pred.eq(source_labels.data.view_as(pred)).cpu().sum()
 
 
