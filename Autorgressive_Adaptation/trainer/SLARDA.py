@@ -145,6 +145,9 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
             print("Training loop in slarda, source_labels after to(gpu)")  #DEBUG
             print(type(source_labels.data))
             print(source_labels.data)
+            print("Predictions")
+            print(pred)
+            print(pred.shape)
             n_correct += pred.eq(source_labels.data.view_as(pred)).cpu().sum()
 
 
