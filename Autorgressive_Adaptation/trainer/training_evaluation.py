@@ -79,6 +79,7 @@ def model_evaluate(model, valid_dl, device):
 
             # compute loss
             print("Predictions", type(predictions)) #DEBUG
+            print(predictions)
             print(predictions.shape)    #DEBUG
             print("Labels", labels) #DEBUG
             print(labels.shape) #DEBUG
