@@ -175,7 +175,8 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
 
             # Target Psuedo labeling
             loss_cls_tgt= criterion(confident_pred,confident_labels)
-
+            print(loss_cls_tgt)
+            print(torch.sum(loss_cls_tgt.isnan()==True))
 
             total_loss = loss_tgt + loss_tgt_wt*loss_cls_tgt
 
