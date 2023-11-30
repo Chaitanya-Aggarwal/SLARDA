@@ -44,8 +44,8 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
         tb = SummaryWriter(comment)
 
     # check if source only model exists, else train it ...
-    # ckp_path = f'./src_only_saved_models/{args.selected_dataset}/last_{args.selected_dataset}_{args.base_model}_src_{src_id}.pt'
-    ckp_path = f'./src_only_saved_models/{args.selected_dataset}/last_{args.selected_dataset}_{args.base_model}_src_{src_id}_.pt'
+    ckp_path = f'./src_only_saved_models/{args.selected_dataset}/last_{args.selected_dataset}_{args.base_model}_src_{src_id}.pt'
+    # ckp_path = f'./src_only_saved_models/{args.selected_dataset}/last_{args.selected_dataset}_{args.base_model}_src_{src_id}_.pt'
     if os.path.exists(ckp_path):
         src_chkpoint = torch.load(ckp_path)['model_state_dict']
     else:
