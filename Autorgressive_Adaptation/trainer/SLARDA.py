@@ -100,7 +100,7 @@ def cross_domain_train(src_train_dl, src_valid_dl, src_test_dl,
             ###########################
             # train discriminator #
             ###########################
-
+            # print(torch.sum(source_data.isnan()==True))
             # zero gradient for the dicriminator
             optimizer_disc.zero_grad()
 

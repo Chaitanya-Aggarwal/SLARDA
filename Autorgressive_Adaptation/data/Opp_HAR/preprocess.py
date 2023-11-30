@@ -5,7 +5,7 @@ import torch.nn.functional as fun
 import argparse
 import pandas as pd
 
-DEBUG = 1
+DEBUG = 0
 
 class TimeSeriesDataset(Dataset):
     def __init__(self, file_paths, window_size, overlap):
@@ -36,7 +36,7 @@ class TimeSeriesDataset(Dataset):
             nulls = df.isna().to_numpy()
             zeros = np.zeros(nulls.shape)
             zeros[nulls] = 1
-            print(list(np.sum(zeros,axis=0)))
+            # print(list(np.sum(zeros,axis=0)))
             datas.append((df.to_numpy(), label))
         self.data = datas
             
@@ -84,9 +84,9 @@ def main():
             #Creat the datasets
             dataset = TimeSeriesDataset(input_file_paths, args.window_size, args.overlap)            
 
-            print(dataset.content)
+            # print(dataset.content)
 
-            print(dataset.content.any().item())
+            # print(dataset.content.any().item())
 
             if (DEBUG):
                 break
