@@ -35,7 +35,6 @@ class Config(object):
         self.base_model = base_model_configs()
 
         self.SLARDA= SLARDA_Configs()
-        self.SLARDA= Supervised()    
 
 class base_model_configs(object):
     def __init__(self):
