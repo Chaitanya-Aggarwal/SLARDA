@@ -106,6 +106,8 @@ def main():
                 break
             # Save the processed data as a .pt file
             torch.save({'samples':dataset.content, 'labels':dataset.labels}, output_file_path)
+            print(dataset.content.size())
+            print(dataset.labels.size())
         if (DEBUG):
             break
     # print(dirty_col)

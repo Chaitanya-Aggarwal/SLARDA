@@ -56,7 +56,7 @@ def read_files():
     
     dataCollection = pd.DataFrame()
     for i, file in enumerate(list_of_files):
-        print(file," is reading...")
+        # print(file," is reading...")
         procData = pd.read_table(file, header=None, sep='\s+')
         procData.columns = col_names
         procData['file_index'] = i # put the file index at the end of the row
@@ -68,21 +68,16 @@ def read_files():
 
 def dataCleaning(dataCollection):
     dataCollection = dataCollection.loc[:,dataCollection.isnull().mean()< 0.1] #drop the columns which has NaN over 10%
-    #print(list(dataCollection.columns.values))
     dataCollection = dataCollection.drop(['MILLISEC', 'LL_Left_Arm','LL_Left_Arm_Object','LL_Right_Arm','LL_Right_Arm_Object', 'ML_Both_Arms'],
                                         axis = 1)  # removal of columns not related, may include others.
     
     dataCollection = dataCollection.apply(pd.to_numeric, errors = 'coerce') #removal of non numeric data in cells
     
-    print(dataCollection.isna().sum().sum())#count all NaN 
-    print(dataCollection.shape)
-    #dataCollection = dataCollection.dropna()
+    # print(dataCollection.isna().sum().sum())#count all NaN 
+    # print(dataCollection.shape)
     dataCollection = dataCollection.interpolate() 
-    print(dataCollection.isna().sum().sum())#count all NaN 
-    #removal of any remaining NaN value cells by constructing new data points in known set of data points
-    #for i in range(0,4):
-    #    dataCollection["heartrate"].iloc[i]=100 # only 4 cells are Nan value, change them manually
-    print("data cleaned!")
+    # print(dataCollection.isna().sum().sum())#count all NaN 
+    # print("data cleaned!")
     return dataCollection
 
 def reset_label(dataCollection, locomotion): 
@@ -115,7 +110,9 @@ def segment_locomotion(dataCollection, window_size): # segment the data and crea
     while start + window_size - 1 < n:
         end = start + window_size-1
         if data[start][loco_i] == data[end][loco_i] and data[start][-1] == data[end][-1] : # if the frame contains the same activity and from the file
-            X.append(data[start:(end+1),0:loco_i])
+
+            # X.append(data[start:(end+1),0:loco_i])
+            X.append(data[start:(end+1),0:113])
             y.append(data[start][loco_i])
             file_ind.append(data[start][-1])
             start += window_size//2 # 50% overlap
@@ -180,10 +177,10 @@ if __name__ == "__main__":
     ratios = (0.6,0.2,0.2)
 
     # train, test, val = split_array(np.arange(data_loco['labels'].shape[0]), ratios)
-    print(data_loco['file_index'])
+    # print(data_loco['file_index'])
     map_names = {0:'a',1:'b',2:'c',3:'d'}
     for user in range(4):
-        print(data_loco['file_index']//5)
+        # print(data_loco['file_index']//5)
         X = data_loco['content'][data_loco['file_index']//5==user]
         y = data_loco['labels'][data_loco['file_index']//5==user]
         train, test, val = split_array(np.arange(y.shape[0]),ratios)
@@ -191,5 +188,11 @@ if __name__ == "__main__":
         val_X, val_Y = torch.Tensor(X[val]), torch.Tensor(y[val])
         test_X, test_Y = torch.Tensor(X[test]), torch.Tensor(y[test])
         torch.save({'samples':train_X, 'labels':train_Y}, "train_"+map_names[user]+".pt")
+        print(train_X.size())
+        print(train_Y.size())
         torch.save({'samples':val_X, 'labels':val_Y}, "val_"+map_names[user]+".pt")
+        print(val_X.size())
+        print(val_Y.size())
         torch.save({'samples':test_X, 'labels':test_Y}, "test_"+map_names[user]+".pt")
+        print(test_X.size())
+        print(test_Y.size())
